@@ -20,6 +20,7 @@ class log extends Component {
     constructor(props){
         super(props);
         this.state = {
+            
             formData: {
                 email: '',
                 password: '',
