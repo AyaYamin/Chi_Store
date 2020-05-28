@@ -19,6 +19,7 @@ import axios from '../../instanceaxios';
 class ContactData extends Component {
     constructor(props) {
         super(props);
+        this._isMounted = false;
         this.state = {
             formData: {
                 email: '',
@@ -33,11 +34,13 @@ class ContactData extends Component {
             username: '',
             ord:[]
         }
-
+      
+          
         this.handleChange = this.handleChange.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
         this.checkoutCancelledHandler = this.checkoutCancelledHandler.bind(this);
         this.orderHandler = this.orderHandler.bind(this);
+        
     }
 
 
@@ -53,6 +56,9 @@ class ContactData extends Component {
         this.emailRef.current.validate(event.target.value);
     }
 
+    componentWillUnmount() {
+        this._isMounted = false;
+      }
 
 
 
@@ -66,17 +72,7 @@ class ContactData extends Component {
 
     orderHandler = (event) => {
         event.preventDefault();
-        let ord=[];
-        this.props.orders.map(function(order){
-            return (   ord.push({
-                image:order.image,
-                price:order.price,
-                quantity:order.quantity,
-                name:order.name,  
-              }))
-           
-            })
-        this.setState({ord:this.props.orderss});
+       
         const order = {
             orders:this.props.orderss,
             status:'Pending',
@@ -84,48 +80,69 @@ class ContactData extends Component {
             customer: {
                 name: this.state.formData['name'],
                 address: {
+
                     country: this.state.formData['country']
                 },
                 email: this.state.formData['email'],
                 phone: this.state.formData['phone']
             },
+
         }
+    
         console.log(order);
-        axios.post('/Ords.json', order)
-            .then(response => {
+        axios.post('/Ords.json', order).then(response => {
                 alert('Your order is submitted');
+                alert(this.props.username)
                 const routes = (
                     <Switch>
-                        <Redirect to={"/User/Products/" + this.props.username} />;
+
+                        <Redirect to={"/User/"+this.props.username} />;
+
                     </Switch>
                 );
                 return (
                     ReactDOM.render(
                         <Router history={Hist}>
-                            <Route path="/User/Products/:username" component={User} />
+                            <Route path="/User/:username" component={User} />
                             {routes}
                         </Router>,
                         document.getElementById("root")
                     )
                 );
-            })
-            .catch(error => {
+
+            }).catch(error => {
+                const routes = (
+                    <Switch>
+
+                        <Redirect to={"/User/"+this.props.username} />;
+
+                    </Switch>
+                );
+                return (
+                    ReactDOM.render(
+                        <Router history={Hist}>
+                            <Route path="/User/:username" component={User} />
+                            {routes}
+                        </Router>,
+                        document.getElementById("root")
+                    )
+                );
             });
+
     }
-
-
-
-
     checkoutCancelledHandler() {
+     
         const routes = (
             <Switch>
-                <Redirect to={"/User/Products/" + this.props.username} />;
+
+                <Redirect to={"/User/"+this.props.username} />;
+
             </Switch>
         );
         return (
             ReactDOM.render(
                 <Router history={Hist}>
-                    <Route path="/User/Products/:username" component={User} />
+                    <Route path="/User/:username" component={User} />
                     {routes}
                 </Router>,
                 document.getElementById("root")
@@ -206,7 +223,7 @@ class ContactData extends Component {
 
 
                                     <CardContent>
-                                        <Typography gutterBottom variant="h2" component="h2"
+                                        <Typography gutterBottom variant="h5" component="h2"
                                             className={classes.productname}>
                                             {order.name}
                                         </Typography>
@@ -279,10 +296,9 @@ class ContactData extends Component {
                                 onChange={this.handleChange}
                                 onBlur={this.handleBlur}
                                 style={style1}
-                                //required
+                                
                                 value={formData.email}
-                                //validators={['required', 'isEmail']}
-                                //errorMessages={['this field is required', 'email is not valid']}
+                              
                             />
                         </Grid>
 
@@ -298,10 +314,9 @@ class ContactData extends Component {
                                 variant="outlined"
                                 onChange={this.handleChange}
                                 style={style1}
-                                //required
+                                
                                 value={formData.phone}
-                               // validators={['required']}
-                               // errorMessages={['this field is required']}
+                              
                             />
                         </Grid>
 
@@ -315,10 +330,9 @@ class ContactData extends Component {
                                 variant="outlined"
                                 onChange={this.handleChange}
                                 style={style1}
-                               // required
+                               
                                 value={formData.country}
-                               // validators={['required']}
-                               // errorMessages={['this field is required']}
+                               
                                 ref={this.countryRef}
 
                             />
