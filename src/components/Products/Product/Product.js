@@ -7,11 +7,9 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+
 import Modal from '@material-ui/core/Modal';
 import axios from "../../../instanceaxios";
-
-
-
 
 
 class Product extends Component {
@@ -71,32 +69,22 @@ class Product extends Component {
 
 
   }
-
-
-
-
-
-
-
-
-
-
-
   handleAddToCart(selectedProducts) {
 
     let cartItem = this.state.cart;
     let productID = selectedProducts.id;
     let productQty = selectedProducts.quantity;
-    if (this.checkProduct(productID))
-     {
+    if (this.checkProduct(productID)) {
+
       let index = cartItem.findIndex(x => x.id === productID);
-      cartItem[index].quantity = Number(cartItem[index].quantity) + Number(productQty);   
+      cartItem[index].quantity =
+        Number(cartItem[index].quantity) + Number(productQty);
       this.setState({
         cart: cartItem
       });
-     } else {
+    } else {
       cartItem.push(selectedProducts);
-     }
+    }
     this.setState({
       cart: cartItem,
       cartBounce: true
@@ -119,22 +107,12 @@ class Product extends Component {
   }
 
 
-
-
-
-
-
   checkProduct(productID) {
     let cart = this.state.cart;
     return cart.some(function (item) {
       return item.id === productID;
     });
   }
-
-
-
-
-
   sumTotalItems() {
     let total = 0;
     let cart = this.state.cart;
@@ -143,12 +121,9 @@ class Product extends Component {
       totalItems: total
     });
   }
-
   componentWillUnmount() {
     this._isMounted = false;
   }
-
-
 
   sumTotalAmount() {
     let total = 0;
@@ -162,22 +137,12 @@ class Product extends Component {
   }
 
 
-
-
-
-
-
   handleChange() {
     this.setState({ open: true });
   }
-
-
-
   handleClose() {
     this.setState({ open: false });
   }
-
-
 
   render() {
     let image = this.props.image;
@@ -220,8 +185,6 @@ class Product extends Component {
         </p>
       </div>
     )
-
-
     return (
       <React.Fragment>
         <Card className={classes.product}>
@@ -274,19 +237,20 @@ class Product extends Component {
         <Modal style={{
           width: '650px',
           height: '220px',
+
+
           paddingLeft: '30%',
+
         }}
           open={this.state.open}
           onClose={this.handleClose.bind(this)}
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
+
         >
           {body}
+
         </Modal>
-        
-        <div style={{ display: 'none' }}>
-          {/* <Cart  products = {this.state} /> */}
-        </div>
       </React.Fragment>
 
     );
